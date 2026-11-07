@@ -14,7 +14,7 @@ export type Tint = "danger" | "brand" | "neutral";
 
 const TINTS: Record<Tint, [string, string, string]> = {
   danger: ["#FF4D5E", "#FF8A3D", "#3A1020"],
-  brand: ["#2BF59A", "#35C9FF", "#06303A"],
+  brand: ["#2BF59A", "#FFC21A", "#0B3A26"],
   neutral: ["#35C9FF", "#6A5CFF", "#0D2240"],
 };
 

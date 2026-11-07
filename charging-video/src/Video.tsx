@@ -1,5 +1,6 @@
 import React from "react";
-import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from "remotion";
+import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
+import { Audio } from "@remotion/media";
 import { linearTiming, TransitionSeries } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
@@ -8,26 +9,21 @@ import {
   S10Goals, S11Income, S12Location, S13Outro, S1Hook, S2Loss, S3Problems,
   S4Wiring, S5Bridge, S6Brand, S7Power, S8Time, S9Safety,
 } from "./scenes";
-import { Logo } from "./icons";
-import { C, FONT } from "./theme";
+import { BrandLogo } from "./brand";
+import { C, FPS, LEAD } from "./theme";
 
 const T = 18;
-const SCENES: { C: React.FC; d: number }[] = [
-  { C: S1Hook, d: 280 },
-  { C: S2Loss, d: 180 },
-  { C: S3Problems, d: 300 },
-  { C: S4Wiring, d: 310 },
-  { C: S5Bridge, d: 130 },
-  { C: S6Brand, d: 240 },
-  { C: S7Power, d: 220 },
-  { C: S8Time, d: 440 },
-  { C: S9Safety, d: 340 },
-  { C: S10Goals, d: 280 },
-  { C: S11Income, d: 340 },
-  { C: S12Location, d: 260 },
-  { C: S13Outro, d: 330 },
+/* Voiceover clip length (seconds) per scene, from public/vo/sNN.mp3 */
+const VO = [8.44, 5.56, 11.08, 10.11, 4.05, 8.28, 7.16, 17.79, 11.39, 10.11, 11.31, 7.71, 13.79];
+const COMPS: React.FC[] = [
+  S1Hook, S2Loss, S3Problems, S4Wiring, S5Bridge, S6Brand, S7Power,
+  S8Time, S9Safety, S10Goals, S11Income, S12Location, S13Outro,
 ];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// clip starts LEAD frames in, plus a breath and the outgoing transition
+const SCENES = COMPS.map((C, i) => ({
+  C,
+  d: LEAD + Math.ceil(VO[i] * FPS) + 22 + T + (i === COMPS.length - 1 ? 60 : 0),
+}));
 const PRES: any[] = [
   fade(), slide({ direction: "from-right" }), fade(), fade(), fade(),
   fade(), slide({ direction: "from-bottom" }), wipe({ direction: "from-left" }),
@@ -43,8 +39,7 @@ const Bug: React.FC = () => {
   const o = interpolate(f, [0, 20], [0, 1], { extrapolateRight: "clamp" });
   return (
     <div style={{ position: "absolute", top: 44, left: 56, display: "flex", alignItems: "center", gap: 14, opacity: o * 0.9 }}>
-      <Logo size={64} />
-      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 30, color: C.text }}>নিরাপদ অটো চার্জিং স্টেশন</div>
+      <BrandLogo width={250} static />
     </div>
   );
 };
@@ -59,6 +54,9 @@ export const Video: React.FC = () => {
           const els = [
             <TransitionSeries.Sequence key={`s${i}`} durationInFrames={s.d}>
               <s.C />
+              <Sequence from={LEAD} layout="none">
+                <Audio src={staticFile(`vo/s${String(i + 1).padStart(2, "0")}.mp3`)} />
+              </Sequence>
             </TransitionSeries.Sequence>,
           ];
           if (i < PRES.length)

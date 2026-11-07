@@ -13,14 +13,14 @@ import {
   Check,
   Clock,
   Gauge,
-  Logo,
   Phone,
   Pin,
-  Rickshaw,
   Shield,
   Warning,
 } from "./icons";
-import { bn, C, FONT } from "./theme";
+import { at, bn, C, FONT } from "./theme";
+import { BrandLogo } from "./brand";
+import { CycleRickshaw, EasyBike } from "./vehicles";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const center: React.CSSProperties = {
@@ -28,50 +28,20 @@ const center: React.CSSProperties = {
   alignItems: "center",
 };
 
-export const BrandName: React.FC<{ size?: number; delay?: number }> = ({
-  size = 120,
-  delay = 0,
-}) => {
-  const f = useCurrentFrame();
-  const s = useSpring(delay, 200, 30);
-  const shine = interpolate(f - delay, [10, 70], [-30, 130], clamp);
-  return (
-    <div
-      style={{
-        fontFamily: FONT,
-        fontWeight: 800,
-        fontSize: size,
-        lineHeight: 1.25,
-        letterSpacing: 1,
-        background: `linear-gradient(100deg, ${C.green} 0%, ${C.cyan} ${shine - 10}%, #ffffff ${shine}%, ${C.cyan} ${shine + 10}%, ${C.green} 100%)`,
-        WebkitBackgroundClip: "text",
-        backgroundClip: "text",
-        color: "transparent",
-        opacity: s,
-        transform: `translateY(${(1 - s) * 40}px)`,
-        filter: `blur(${(1 - s) * 10}px) drop-shadow(0 0 30px rgba(43,245,154,0.35))`,
-        textAlign: "center",
-        padding: "0 10px",
-      }}
-    >
-      নিরাপদ অটো চার্জিং স্টেশন
-    </div>
-  );
-};
-
 /* 1 ─ Hook: dead battery / slow charge */
 export const S1Hook: React.FC = () => {
   const f = useCurrentFrame();
-  const phase2 = f >= 135;
+  const SPLIT = at(3.2);
+  const phase2 = f >= SPLIT;
   const lvl = phase2
-    ? interpolate(f, [140, 230], [0.08, 0.68], {
+    ? interpolate(f, [SPLIT + 5, SPLIT + 95], [0.08, 0.68], {
         ...clamp,
         easing: Easing.out(Easing.cubic),
-      }) + (f > 230 ? Math.sin(f / 6) * 0.004 : 0)
-    : interpolate(f, [0, 100], [0.4, 0.04], { ...clamp, easing: Easing.inOut(Easing.cubic) });
+      }) + (f > SPLIT + 95 ? Math.sin(f / 6) * 0.004 : 0)
+    : interpolate(f, [0, SPLIT - 30], [0.4, 0.04], { ...clamp, easing: Easing.inOut(Easing.cubic) });
   const col = phase2 ? C.yellow : lvl < 0.15 ? C.red : C.orange;
   const s = useSpring(0, 14);
-  const shake = !phase2 && f > 95 && f < 130 ? Math.sin(f * 2.2) * 6 : 0;
+  const shake = !phase2 && f > SPLIT - 35 && f < SPLIT - 5 ? Math.sin(f * 2.2) * 6 : 0;
   return (
     <Scene tint="danger">
       <AbsoluteFill style={{ flexDirection: "row", ...center, gap: 110, padding: "0 140px" }}>
@@ -91,12 +61,12 @@ export const S1Hook: React.FC = () => {
           </div>
         </div>
         <div style={{ width: 980, position: "relative", height: 400 }}>
-          <Line from={0} dur={135} style={{ position: "absolute", top: 60 }}>
+          <Line from={0} dur={SPLIT} style={{ position: "absolute", top: 60 }}>
             <Words text="চার্জ শেষ হয়ে রাস্তায় আটকে গেছেন কখনো?" size={92} weight={700} hl={["আটকে", "গেছেন"]} hlColor={C.red} />
           </Line>
-          <Line from={135} dur={145} last style={{ position: "absolute", top: 20 }}>
+          <Line from={SPLIT} dur={200} last style={{ position: "absolute", top: 20 }}>
             <Words text="অথবা ঘণ্টার পর ঘণ্টা চার্জ দিয়েও দেখেছেন—" size={66} weight={600} color={C.muted} />
-            <Words text="ব্যাটারি ঠিকমতো ফুল হচ্ছে না?" size={92} weight={700} delay={24} hl={["ফুল", "না?"]} hlColor={C.yellow} style={{ marginTop: 14 }} />
+            <Words text="ব্যাটারি ঠিকমতো ফুল হচ্ছে না?" size={92} weight={700} delay={36} hl={["ফুল", "না?"]} hlColor={C.yellow} style={{ marginTop: 14 }} />
           </Line>
         </div>
       </AbsoluteFill>
@@ -107,7 +77,7 @@ export const S1Hook: React.FC = () => {
 /* 2 ─ Driver's income loss */
 export const S2Loss: React.FC = () => {
   const f = useCurrentFrame();
-  const big = useSpring(55, 10);
+  const big = useSpring(at(3.2), 10);
   return (
     <Scene tint="danger">
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 110 }}>
@@ -129,9 +99,9 @@ export const S2Loss: React.FC = () => {
       </AbsoluteFill>
       <AbsoluteFill style={{ top: 560, alignItems: "center" }}>
         <div style={{ position: "relative" }}>
-          <Rickshaw width={620} hazard glow="#3FAE7A" />
+          <EasyBike width={600} hazard />
           {[0, 1, 2, 3, 4].map((i) => {
-            const t = (f - 60 - i * 14) / 60;
+            const t = (f - at(3.3) - i * 14) / 60;
             if (t < 0) return null;
             const y = interpolate(t, [0, 1], [0, 260], clamp);
             const o = interpolate(t, [0, 0.2, 0.8, 1], [0, 1, 1, 0], clamp);
@@ -178,7 +148,7 @@ export const S3Problems: React.FC = () => {
         <Words text="অনেক জায়গায় চার্জ দিতে গিয়ে সমস্যার শেষ নেই।" size={80} weight={700} align="center" hl={["সমস্যার"]} hlColor={C.orange} />
         <div style={{ display: "flex", gap: 50, marginTop: 90 }}>
           {items.map((it, i) => (
-            <Card key={i} delay={40 + i * 22} accent={it.c} style={{ width: 470, height: 380, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 34 }}>
+            <Card key={i} delay={[at(3.2), at(4.6), at(6.8)][i]} accent={it.c} style={{ width: 470, height: 380, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 34 }}>
               <div style={{ height: 160, display: "flex", alignItems: "center" }}>{it.icon}</div>
               <div style={{ fontFamily: FONT, fontSize: 46, fontWeight: 700, color: C.text, textAlign: "center", lineHeight: 1.3 }}>{it.t}</div>
             </Card>
@@ -191,8 +161,8 @@ export const S3Problems: React.FC = () => {
             weight={500}
             color={C.muted}
             align="center"
-            delay={110}
-            stagger={2}
+            delay={at(3.3)}
+            stagger={4}
           />
         </div>
       </AbsoluteFill>
@@ -229,12 +199,12 @@ export const S4Wiring: React.FC = () => {
           </div>
         </div>
         <div style={{ flex: 1, position: "relative", height: 520 }}>
-          <Line from={0} dur={160} style={{ position: "absolute", top: 40 }}>
+          <Line from={0} dur={at(5.6)} style={{ position: "absolute", top: 40 }}>
             <Words text="তার ওপর অপরিকল্পিত তার, দুর্বল সংযোগ আর নিরাপত্তাহীন চার্জিং ব্যবস্থা—" size={72} weight={700} hl={["অপরিকল্পিত", "দুর্বল", "নিরাপত্তাহীন"]} hlColor={C.orange} />
           </Line>
-          <Line from={160} dur={150} last style={{ position: "absolute", top: 60 }}>
+          <Line from={at(5.6)} dur={200} last style={{ position: "absolute", top: 60 }}>
             <Words text="সব মিলিয়ে সময় নষ্ট হয়," size={72} weight={700} hl={["নষ্ট"]} hlColor={C.red} />
-            <Words text="ব্যাটারির ওপরও পড়ে বাড়তি চাপ।" size={72} weight={700} delay={20} hl={["বাড়তি", "চাপ।"]} hlColor={C.red} style={{ marginTop: 10 }} />
+            <Words text="ব্যাটারির ওপরও পড়ে বাড়তি চাপ।" size={72} weight={700} delay={45} hl={["বাড়তি", "চাপ।"]} hlColor={C.red} style={{ marginTop: 10 }} />
           </Line>
         </div>
       </AbsoluteFill>
@@ -260,8 +230,6 @@ export const S5Bridge: React.FC = () => {
 export const S6Brand: React.FC = () => {
   const f = useCurrentFrame();
   const flash = interpolate(f, [0, 4, 22], [0, 0.85, 0], clamp);
-  const logoP = interpolate(f, [4, 50], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
-  const ls = useSpring(4, 12);
   const ring = interpolate(f, [4, 60], [0, 1], clamp);
   return (
     <Scene tint="brand">
@@ -269,12 +237,9 @@ export const S6Brand: React.FC = () => {
         <div style={{ position: "absolute", width: 300 + ring * 1400, height: 300 + ring * 1400, borderRadius: "50%", border: `3px solid ${C.green}`, opacity: 1 - ring }} />
       </AbsoluteFill>
       <AbsoluteFill style={{ ...center, flexDirection: "column", gap: 30 }}>
-        <div style={{ transform: `scale(${0.5 + 0.5 * ls})` }}>
-          <Logo size={300} progress={logoP} />
-        </div>
-        <BrandName size={128} delay={30} />
-        <div style={{ marginTop: 20, width: 1500 }}>
-          <Words text="আপনার অটোরিকশার জন্য নিরাপদ, দ্রুত এবং নির্ভরযোগ্য চার্জিং সেবা।" size={54} weight={500} color={C.text} align="center" delay={80} hl={["নিরাপদ,", "দ্রুত", "নির্ভরযোগ্য"]} hlColor={C.green} />
+        <BrandLogo width={1250} delay={2} />
+        <div style={{ marginTop: 50, width: 1500 }}>
+          <Words text="আপনার অটোরিকশার জন্য নিরাপদ, দ্রুত এবং নির্ভরযোগ্য চার্জিং সেবা।" size={54} weight={500} color={C.text} align="center" delay={at(2.8)} hl={["নিরাপদ,", "দ্রুত", "নির্ভরযোগ্য"]} hlColor={C.green} />
         </div>
       </AbsoluteFill>
       <AbsoluteFill style={{ background: "#fff", opacity: flash }} />
@@ -333,16 +298,16 @@ export const S8Time: React.FC = () => {
           <Clock size={460} speed={4} color={C.cyan} />
         </div>
         <div style={{ flex: 1, position: "relative", height: 560 }}>
-          <Line from={0} dur={130} style={{ position: "absolute", top: 150 }}>
+          <Line from={0} dur={at(4.5)} style={{ position: "absolute", top: 150 }}>
             <Words text="আমরা বুঝি, একজন চালকের কাছে সময় কতটা গুরুত্বপূর্ণ।" size={80} weight={700} hl={["সময়"]} hlColor={C.cyan} />
           </Line>
-          <Line from={130} dur={150} style={{ position: "absolute", top: 110 }}>
+          <Line from={at(4.5)} dur={at(10.6) - at(4.5)} style={{ position: "absolute", top: 110 }}>
             <Words text="কারণ চার্জের জন্য যত বেশি সময় অপেক্ষা করবেন," size={70} weight={600} color={C.muted} />
-            <Words text="রাস্তায় কাজ করার সময় তত কমে যাবে।" size={78} weight={700} delay={26} hl={["কমে"]} hlColor={C.orange} style={{ marginTop: 14 }} />
+            <Words text="রাস্তায় কাজ করার সময় তত কমে যাবে।" size={78} weight={700} delay={80} hl={["কমে"]} hlColor={C.orange} style={{ marginTop: 14 }} />
           </Line>
-          <Line from={280} dur={160} last style={{ position: "absolute", top: 70 }}>
+          <Line from={at(10.6)} dur={260} last style={{ position: "absolute", top: 70 }}>
             <Words text="তাই আমাদের লক্ষ্য—" size={64} weight={600} color={C.green} />
-            <Words text="অপ্রয়োজনীয় অপেক্ষা কমিয়ে যতটা সম্ভব কার্যকর ও সুবিধাজনক চার্জিং সেবা দেওয়া।" size={72} weight={700} delay={18} hl={["কার্যকর", "সুবিধাজনক"]} style={{ marginTop: 14 }} />
+            <Words text="অপ্রয়োজনীয় অপেক্ষা কমিয়ে যতটা সম্ভব কার্যকর ও সুবিধাজনক চার্জিং সেবা দেওয়া।" size={72} weight={700} delay={30} hl={["কার্যকর", "সুবিধাজনক"]} style={{ marginTop: 14 }} />
           </Line>
         </div>
       </AbsoluteFill>
@@ -353,13 +318,14 @@ export const S8Time: React.FC = () => {
 /* 9 ─ Safety first */
 export const S9Safety: React.FC = () => {
   const f = useCurrentFrame();
-  const shieldP = interpolate(f, [135, 200], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) });
+  const S2 = at(3.8) - 5;
+  const shieldP = interpolate(f, [S2 + 10, S2 + 75], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) });
   const items = ["সঠিক সংযোগ", "সুশৃঙ্খল চার্জিং ব্যবস্থা", "নিরাপত্তা"];
   return (
     <Scene tint="brand">
-      <Sequence durationInFrames={130} layout="none">
+      <Sequence durationInFrames={S2 + 5} layout="none">
         <AbsoluteFill style={{ ...center }}>
-          <Line from={0} dur={130}>
+          <Line from={0} dur={S2 + 5}>
             <div style={{ width: 1500 }}>
               <Words text="চার্জিং শুধু দ্রুত হলেই হবে না," size={84} weight={700} align="center" />
               <Words text="সেটি নিরাপদও হতে হবে।" size={110} weight={800} align="center" delay={24} hl={["নিরাপদও"]} style={{ marginTop: 10 }} />
@@ -367,14 +333,14 @@ export const S9Safety: React.FC = () => {
           </Line>
         </AbsoluteFill>
       </Sequence>
-      <Sequence from={125} layout="none">
+      <Sequence from={S2} layout="none">
         <AbsoluteFill style={{ flexDirection: "row", alignItems: "center", padding: "0 170px", gap: 120 }}>
           <Shield size={400} progress={shieldP} />
           <div style={{ flex: 1 }}>
             <Words text="তাই নিরাপদ অটো চার্জিং স্টেশনে গুরুত্ব দেওয়া হয়েছে—" size={58} weight={600} color={C.muted} delay={10} />
             <div style={{ display: "flex", flexDirection: "column", gap: 28, marginTop: 44 }}>
               {items.map((t, i) => (
-                <CheckRow key={i} text={t} delay={60 + i * 26} />
+                <CheckRow key={i} text={t} delay={[at(7.3), at(8.5), at(9.9)][i] - S2} />
               ))}
             </div>
           </div>
@@ -404,10 +370,10 @@ export const S10Goals: React.FC = () => (
           <Words text="গাড়ি ভালোভাবে চার্জ করে আবার দ্রুত রাস্তায় ফেরা।" size={70} weight={700} delay={24} hl={["দ্রুত", "রাস্তায়"]} hlColor={C.cyan} />
         </div>
       </Card>
-      <Card delay={110} from="right" accent={C.green} style={{ width: 780, height: 520 }}>
+      <Card delay={at(5.2)} from="right" accent={C.green} style={{ width: 780, height: 520 }}>
         <div style={{ fontFamily: FONT, fontSize: 44, fontWeight: 600, color: C.green }}>আর আমাদের লক্ষ্য—</div>
         <div style={{ marginTop: 34 }}>
-          <Words text="আপনাকে একটি নির্ভরযোগ্য চার্জিং অভিজ্ঞতা দেওয়া।" size={70} weight={700} delay={126} hl={["নির্ভরযোগ্য"]} />
+          <Words text="আপনাকে একটি নির্ভরযোগ্য চার্জিং অভিজ্ঞতা দেওয়া।" size={70} weight={700} delay={at(5.2) + 16} hl={["নির্ভরযোগ্য"]} />
         </div>
       </Card>
     </AbsoluteFill>
@@ -424,8 +390,11 @@ export const S11Income: React.FC = () => {
       <AbsoluteFill style={{ top: 860, height: 220, background: "linear-gradient(#1b2633, #0c131c)" }}>
         <div style={{ position: "absolute", top: 100, left: 0, right: 0, height: 10, backgroundImage: `repeating-linear-gradient(90deg, ${C.yellow} 0 80px, transparent 80px 160px)`, backgroundPosition: `${-f * 18}px 0`, opacity: 0.8 }} />
       </AbsoluteFill>
-      <AbsoluteFill style={{ top: 612, left: interpolate(f, [0, 60], [-700, 160], { ...clamp, easing: Easing.out(Easing.cubic) }) }}>
-        <Rickshaw width={540} speed={3} glow={C.greenDeep} />
+      <AbsoluteFill style={{ top: 642, left: interpolate(f, [0, 70], [-900, 60], { ...clamp, easing: Easing.out(Easing.cubic) }) }}>
+        <CycleRickshaw width={330} speed={3} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{ top: 572, left: interpolate(f, [0, 60], [-700, 430], { ...clamp, easing: Easing.out(Easing.cubic) }) }}>
+        <EasyBike width={460} speed={3} />
       </AbsoluteFill>
       {/* chart */}
       <div style={{ position: "absolute", right: 170, top: 470, display: "flex", alignItems: "flex-end", gap: 26, height: 330 }}>
@@ -437,16 +406,16 @@ export const S11Income: React.FC = () => {
       </div>
       <AbsoluteFill style={{ alignItems: "center", paddingTop: 110 }}>
         <div style={{ width: 1600, position: "relative", height: 330 }}>
-          <Line from={0} dur={165} style={{ position: "absolute", width: "100%" }}>
+          <Line from={0} dur={at(5.6)} style={{ position: "absolute", width: "100%" }}>
             <Words text="কারণ গাড়ি যত বেশি সময় রাস্তায় থাকবে," size={72} weight={700} align="center" />
             <Words text="আপনার আয়ের সুযোগও তত বেশি থাকবে।" size={84} weight={800} align="center" delay={24} hl={["আয়ের", "বেশি"]} style={{ marginTop: 10 }} />
           </Line>
-          <Line from={165} dur={175} last style={{ position: "absolute", width: "100%" }}>
+          <Line from={at(5.6)} dur={240} last style={{ position: "absolute", width: "100%" }}>
             <Words text="ভালো চার্জিং মানে—" size={70} weight={700} align="center" color={C.green} />
             <div style={{ display: "flex", gap: 30, justifyContent: "center", marginTop: 36 }}>
-              <Pill delay={20} size={48} color={C.green}>কম ঝামেলা</Pill>
-              <Pill delay={36} size={48} color={C.cyan}>কম অপেক্ষা</Pill>
-              <Pill delay={52} size={48} color={C.yellow}>কাজের জন্য বেশি সময়</Pill>
+              <Pill delay={at(7.4) - at(5.6)} size={48} color={C.green}>কম ঝামেলা</Pill>
+              <Pill delay={at(8.5) - at(5.6)} size={48} color={C.cyan}>কম অপেক্ষা</Pill>
+              <Pill delay={at(9.6) - at(5.6)} size={48} color={C.yellow}>কাজের জন্য বেশি সময়</Pill>
             </div>
           </Line>
         </div>
@@ -487,10 +456,10 @@ export const S12Location: React.FC = () => {
         </div>
         <div style={{ flex: 1 }}>
           <Words text="আমাদের খুঁজে পাবেন—" size={66} weight={700} color={C.cyan} delay={20} />
-          <Card delay={45} accent={C.red} style={{ marginTop: 40, padding: "44px 50px" }}>
-            <Words text="সরকারি হাসপাতালের পাশে," size={62} weight={700} delay={55} />
-            <Words text="কুসুমবাগ, হাসপাতাল রোড," size={58} weight={600} delay={75} style={{ marginTop: 10 }} />
-            <Words text="দিরাই পৌরসভা, দিরাই, সুনামগঞ্জ।" size={58} weight={600} delay={95} color={C.muted} style={{ marginTop: 10 }} />
+          <Card delay={at(1.2)} accent={C.red} style={{ marginTop: 40, padding: "44px 50px" }}>
+            <Words text="সরকারি হাসপাতালের পাশে," size={62} weight={700} delay={at(1.4)} />
+            <Words text="কুসুমবাগ, হাসপাতাল রোড," size={58} weight={600} delay={at(3.2)} style={{ marginTop: 10 }} />
+            <Words text="দিরাই পৌরসভা, দিরাই, সুনামগঞ্জ।" size={58} weight={600} delay={at(5.0)} color={C.muted} style={{ marginTop: 10 }} />
           </Card>
         </div>
       </AbsoluteFill>
@@ -501,27 +470,26 @@ export const S12Location: React.FC = () => {
 /* 13 ─ Outro */
 export const S13Outro: React.FC = () => {
   const f = useCurrentFrame();
-  const logoP = interpolate(f, [135, 180], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
-  const phone = useSpring(225, 12);
+  const O = at(3.3);
+  const phone = useSpring(at(9.4), 12);
   const glow = 0.5 + 0.5 * Math.sin(f / 10);
   return (
     <Scene tint="brand">
-      <Sequence durationInFrames={135} layout="none">
+      <Sequence durationInFrames={O + 5} layout="none">
         <AbsoluteFill style={{ ...center }}>
-          <Line from={0} dur={135}>
+          <Line from={0} dur={O + 5}>
             <Words text="চার্জ নিয়ে দুশ্চিন্তা নয়—" size={96} weight={700} align="center" color={C.muted} />
             <Words text="আত্মবিশ্বাস নিয়ে চলুন।" size={130} weight={800} align="center" delay={28} hl={["আত্মবিশ্বাস"]} style={{ marginTop: 16 }} />
           </Line>
         </AbsoluteFill>
       </Sequence>
-      <Sequence from={130} layout="none">
+      <Sequence from={O} layout="none">
         <AbsoluteFill style={{ ...center, flexDirection: "column", gap: 18 }}>
-          <Logo size={230} progress={logoP} />
-          <BrandName size={112} delay={20} />
-          <Words text="আপনার গাড়ির শক্তির নির্ভরযোগ্য ঠিকানা।" size={56} weight={500} align="center" delay={50} />
+          <BrandLogo width={1050} delay={at(3.6) - O} />
+          <Words text="আপনার গাড়ির শক্তির নির্ভরযোগ্য ঠিকানা।" size={60} weight={600} align="center" delay={at(5.8) - O} style={{ marginTop: 40 }} />
           <div
             style={{
-              marginTop: 34,
+              marginTop: 40,
               display: "flex",
               alignItems: "center",
               gap: 24,

@@ -38,3 +38,8 @@ export const FPS = 30;
 const BN = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 export const bn = (n: number | string) =>
   String(n).replace(/[0-9]/g, (d) => BN[Number(d)]);
+
+/* Voiceover timing: each scene's clip starts LEAD frames in. `at(sec)` turns a
+   time inside that clip into a scene-local frame. */
+export const LEAD = 12;
+export const at = (sec: number) => Math.round(LEAD + sec * FPS);
