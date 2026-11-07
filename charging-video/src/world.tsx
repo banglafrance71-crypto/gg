@@ -267,7 +267,8 @@ export const Station: React.FC<{ lights?: number }> = ({ lights = 1 }) => {
           boxShadow: `0 0 ${60 * lights}px rgba(43,245,154,${0.5 * lights})`,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
+          paddingLeft: 80,
         }}
       >
         <Img src={staticFile("logo/full.png")} style={{ height: 130, opacity: 0.3 + 0.7 * lights }} />

@@ -342,8 +342,8 @@ export const T7: React.FC = () => {
         <path d={`M1300 780 C1200 900 900 900 ${BX + 430} ${ROAD - 110}`} stroke={C.green} strokeWidth={6} fill="none" strokeDasharray="18 30" strokeDashoffset={-f * 6} style={{ filter: `drop-shadow(0 0 8px ${C.green})` }} />
       </svg>
       <Bike x={BX} w={W} />
-      <BatteryBubble x={BX + 430} y={ROAD - 0.653 * W + 20} level={lvl} scale={2} />
-      {lvl > 0.98 ? <Sparks x={BX + 430} y={ROAD - 0.653 * W - 120} size={0.8} /> : null}
+      <BatteryBubble x={BX + 430} y={ROAD - 0.653 * W + 220} level={lvl} scale={1.5} />
+      {lvl > 0.98 ? <Sparks x={BX + 430} y={ROAD - 0.653 * W + 60} size={0.7} /> : null}
     </Camera>
   );
 };
@@ -411,7 +411,7 @@ const TeaBreak: React.FC = () => {
       <Station />
       <Charger x={140} y={560} />
       <Bike x={300} w={600} />
-      <BatteryBubble x={300 + 360} y={ROAD - 0.653 * 600 + 10} level={lvl} scale={1.4} />
+      <BatteryBubble x={300 + 360} y={ROAD - 0.653 * 600 + 170} level={lvl} scale={1.2} />
       <div style={{ position: "absolute", left: 1080, top: 760, width: 560, height: 30, background: "#7a5a3a", borderRadius: 6 }} />
       <div style={{ position: "absolute", left: 1110, top: 790, width: 24, height: 110, background: "#5a4028" }} />
       <div style={{ position: "absolute", left: 1590, top: 790, width: 24, height: 110, background: "#5a4028" }} />
@@ -479,7 +479,7 @@ const SafeRow: React.FC<{ cue: number }> = ({ cue }) => {
           </React.Fragment>
         ))}
       </Camera>
-      <AbsoluteFill style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-start", paddingTop: 70, gap: 30 }}>
+      <AbsoluteFill style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-start", paddingTop: 440, gap: 30 }}>
         {badges.map((b, i) => (
           <Pill key={i} delay={b.d} size={46} color={b.c}>
             {b.icon}
@@ -515,7 +515,7 @@ export const T10: React.FC = () => {
             <Station />
             <Charger x={300} y={560} />
             <Person x={960} y={ROAD - 168 * 1.4} scale={1.4} expr="happy" arm="thumb" shirt="#0C7A4A" lungi="#26313b" gamchha={false} cap="#0A5F3A" seed={9} />
-            <Sparks x={1180} y={300} size={0.5} />
+            <Sparks x={1180} y={520} size={0.5} />
           </Camera>
         </FadeIn>
       </Sequence>
@@ -584,7 +584,7 @@ export const T13: React.FC = () => {
           <Bike x={980} w={640} />
           <Person x={760} y={ROAD - 168 * 1.3} scale={1.3} expr="proud" arm="thumb" />
           <Person x={330} y={ROAD - 168 * 1.15} scale={1.15} expr="happy" arm="wave" shirt="#0C7A4A" lungi="#26313b" gamchha={false} cap="#0A5F3A" seed={9} />
-          <Sparks x={900} y={280} size={0.5} />
+          <Sparks x={900} y={500} size={0.5} />
         </Camera>
       </Sequence>
       <Sequence from={O} layout="none">
