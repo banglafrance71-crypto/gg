@@ -10,14 +10,16 @@ import { FPS, LEAD } from "./theme";
    1. Put clips in public/vo/s01.mp3, s02.mp3 …
    2. Run scripts/vo_timing.sh public/vo/*.mp3 and paste durations into VO.
    3. Inside scenes, place beats with at(seconds) from theme.ts. */
-const T = 18; // transition frames
+const T = 12; // transition frames (keep it brisk)
 const VO: number[] = [/* seconds per clip, e.g. 8.44, 5.56 */];
 const COMPS: React.FC[] = [/* S1, S2, … in the same order as VO */];
 const MUSIC: string | null = null; // e.g. "music/bed.mp3" (ducked under narration)
+// Extra picture frames after a scene's voice — only where the picture needs to land (face zoom, end card).
+const PAD: number[] = [];
 
 const SCENES = COMPS.map((C, i) => ({
   C,
-  d: LEAD + Math.ceil((VO[i] ?? 3) * FPS) + 22 + T + (i === COMPS.length - 1 ? 60 : 0),
+  d: LEAD + Math.ceil((VO[i] ?? 3) * FPS) + 4 + T + (PAD[i] ?? 0) + (i === COMPS.length - 1 ? 45 : 0),
 }));
 export const TOTAL = Math.max(1, SCENES.reduce((a, s) => a + s.d, 0) - T * Math.max(0, SCENES.length - 1));
 

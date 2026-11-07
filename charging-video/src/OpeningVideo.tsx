@@ -6,12 +6,12 @@ import { fade } from "@remotion/transitions/fade";
 import { O1, O2, O3, O4, O5, O6, O7, O8 } from "./opening";
 import { FPS, LEAD } from "./theme";
 
-const T = 18;
-const VO = [5.15, 5.25, 3.97, 10.27, 5.56, 4.36, 7.63, 11.08];
+const T = 12;
+const VO = [4.57, 4.57, 3.53, 9.33, 5.07, 3.92, 7.03, 10.08]; // tightened clips in public/vo2f
 // extra frames of picture after the voice (zoom holds, ribbon cutting, etc.)
-const PAD = [55, 30, 45, 40, 25, 30, 45, 60];
+const PAD = [18, 6, 10, 10, 0, 6, 15, 45];
 const COMPS: React.FC[] = [O1, O2, O3, O4, O5, O6, O7, O8];
-const SCENES = COMPS.map((C, i) => ({ C, d: LEAD + Math.ceil(VO[i] * FPS) + 22 + T + PAD[i] }));
+const SCENES = COMPS.map((C, i) => ({ C, d: LEAD + Math.ceil(VO[i] * FPS) + 4 + T + PAD[i] }));
 export const OPENING_TOTAL = SCENES.reduce((a, s) => a + s.d, 0) - T * (SCENES.length - 1);
 
 export const OpeningVideo: React.FC = () => (
@@ -22,7 +22,7 @@ export const OpeningVideo: React.FC = () => (
           <TransitionSeries.Sequence key={`s${i}`} durationInFrames={s.d}>
             <s.C />
             <Sequence from={LEAD} layout="none">
-              <Audio src={staticFile(`vo2/s${String(i + 1).padStart(2, "0")}.mp3`)} />
+              <Audio src={staticFile(`vo2f/s${String(i + 1).padStart(2, "0")}.mp3`)} />
             </Sequence>
           </TransitionSeries.Sequence>,
         ];

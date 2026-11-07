@@ -35,11 +35,12 @@ Headless Chromium in cloud sessions **can't fetch Google Fonts** (render times o
 2. `creative_create_flow` once, then one `creative_generate_speech` **per scene** (model `eleven_v4`, same `voice_id`, same `flow_id`). Fire them in parallel. Leave `generations_count` at the default.
    - Keep the user's script words exactly. Add only tags like `[curious]`, `[serious]`, `[warmly]`, `[excited]` and `[pause]` between sentences.
    - Keep phone numbers in the user's digits (Bengali digits are fine on v4).
-3. Poll `creative_get_flow_run_status` with the first session id of each scene; download take 1 of each to `public/vo/sNN.mp3` with curl.
-4. Run `scripts/vo_timing.sh public/vo/*.mp3` and paste the durations into `VO` in `Video.tsx`.
-5. Inside scenes, place beats with `at(sec)`, which is `LEAD + sec*30` (the clip starts `LEAD` = 12 frames into its scene). Pick a cue just after the pause that ends the previous sentence.
+3. Poll `creative_get_flow_run_status` with the first session id of each scene; download take 1 of each to `public/vo_raw/sNN.mp3` with curl.
+4. **Always tighten the clips**: `scripts/tighten_vo.sh public/vo_raw public/vo`. This trims lead/tail silence, shortens inner pauses and speeds up 7%. The user found the untightened pacing too slow.
+5. Run `scripts/vo_timing.sh public/vo/*.mp3` on the tightened clips and paste the durations into `VO` in `Video.tsx`.
+6. Inside scenes, place beats with `at(sec)`, which is `LEAD + sec*30` (the clip starts `LEAD` = 6 frames into its scene). Pick a cue just after the pause that ends the previous sentence.
 
-Scene length is `LEAD + ceil(VO*30) + 22 (breath) + T (transition)`, plus 60 frames of hold on the last scene.
+Scene length is `LEAD (6) + ceil(VO*30) + 4 (breath) + T (12-frame transition) + PAD[i]`. `PAD` is 0 by default; give 10–20 frames only where the picture needs to land (a face zoom, a ribbon cut), and about 45 on the end card. **Target: under 0.8 s of silence between voice lines.** Check with `ffmpeg -i out.mp4 -af silencedetect=n=-40dB:d=0.6 -f null -`.
 
 ## 4. Logo prep
 

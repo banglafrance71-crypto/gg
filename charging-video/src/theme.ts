@@ -41,5 +41,5 @@ export const bn = (n: number | string) =>
 
 /* Voiceover timing: each scene's clip starts LEAD frames in. `at(sec)` turns a
    time inside that clip into a scene-local frame. */
-export const LEAD = 12;
+export const LEAD = 6;
 export const at = (sec: number) => Math.round(LEAD + sec * FPS);

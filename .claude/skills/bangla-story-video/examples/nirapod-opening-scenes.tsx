@@ -144,8 +144,8 @@ const Confetti: React.FC<{ from: number }> = ({ from }) => {
 /* ── 1 · Full charge in the morning… dead before evening ── */
 export const O1: React.FC = () => {
   const f = useCurrentFrame();
-  const DRAIN0 = at(2.4);
-  const STOP = at(4.7);
+  const DRAIN0 = at(2.2);
+  const STOP = at(4.3);
   const W = 700;
   const BX = 560;
   const fc = face(BX, W);
@@ -171,8 +171,8 @@ export const O1: React.FC = () => {
 /* ── 2 · Work stops, income stops ── */
 export const O2: React.FC = () => {
   const f = useCurrentFrame();
-  const K = at(3.0); // "কাজ বন্ধ"
-  const A = at(4.1); // "আয় বন্ধ"
+  const K = at(2.75); // "কাজ বন্ধ"
+  const A = at(3.8); // "আয় বন্ধ"
   const px = f < 30 ? interpolate(f, [0, 30], [-200, 400]) : f < 50 ? 400 : interpolate(f, [50, 110], [400, -320], clamp);
   const leaving = f >= 50;
   const stop = useSpring(K, 10);
@@ -202,7 +202,7 @@ export const O2: React.FC = () => {
 export const O3: React.FC = () => {
   const f = useCurrentFrame();
   const lights = interpolate(f, [6, 20], [0.15, 1], clamp);
-  const band = interpolate(f, [at(1.6), at(1.6) + 16], [0, 1], clamp);
+  const band = interpolate(f, [at(1.45), at(1.45) + 16], [0, 1], clamp);
   return (
     <AbsoluteFill>
       <Camera keys={[[0, 960, 600, 1.2], [200, 960, 560, 1.0]]}>
@@ -215,8 +215,8 @@ export const O3: React.FC = () => {
       </Camera>
       <AbsoluteFill style={{ background: `linear-gradient(transparent 35%, rgba(5,14,26,${0.9 * band}) 65%)` }} />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-end", paddingBottom: 120 }}>
-        {f >= at(1.6) ? (
-          <Sequence from={at(1.6)} layout="none">
+        {f >= at(1.45) ? (
+          <Sequence from={at(1.45)} layout="none">
             <BrandLogo width={1050} delay={0} />
           </Sequence>
         ) : null}
@@ -228,7 +228,7 @@ export const O3: React.FC = () => {
 /* ── 4 · All night charging → full in the morning ── */
 export const O4: React.FC = () => {
   const f = useCurrentFrame();
-  const DAWN = at(5.3);
+  const DAWN = at(5.0);
   const night = interpolate(f, [0, 10, DAWN - 15, DAWN + 15], [0.5, 1, 1, 0], clamp);
   const lvl = interpolate(f, [10, DAWN - 10], [0.1, 1], { ...clamp, easing: Easing.inOut(Easing.quad) });
   const go = DAWN + 40;
@@ -315,8 +315,8 @@ export const O6: React.FC = () => {
         </div>
         <Card delay={at(0)} accent={C.red} style={{ flex: 1, padding: "50px 56px" }}>
           <Words text="সরকারি হাসপাতালের পাশে," size={56} weight={700} delay={at(0)} />
-          <Words text="কুসুমবাগ, হাসপাতাল রোড," size={56} weight={600} delay={at(1.7)} style={{ marginTop: 12 }} />
-          <Words text="দিরাই।" size={56} weight={600} delay={at(3.2)} color={C.muted} style={{ marginTop: 12 }} />
+          <Words text="কুসুমবাগ, হাসপাতাল রোড," size={56} weight={600} delay={at(1.55)} style={{ marginTop: 12 }} />
+          <Words text="দিরাই।" size={56} weight={600} delay={at(2.9)} color={C.muted} style={{ marginTop: 12 }} />
         </Card>
       </AbsoluteFill>
     </AbsoluteFill>
@@ -332,7 +332,7 @@ const GUESTS: { x: number; shirt: string; lungi: string; gam?: boolean; expr: Ex
 ];
 export const O7: React.FC = () => {
   const f = useCurrentFrame();
-  const CUT = at(6.0);
+  const CUT = at(5.4);
   const cut = interpolate(f, [CUT, CUT + 14], [0, 1], clamp);
   const sc = interpolate(f, [CUT - 30, CUT], [-160, 0], clamp);
   return (
@@ -366,14 +366,14 @@ export const O7: React.FC = () => {
 /* ── 8 · End card ── */
 export const O8: React.FC = () => {
   const f = useCurrentFrame();
-  const phone = useSpring(at(6.9), 12);
+  const phone = useSpring(at(6.4), 12);
   const glow = 0.5 + 0.5 * Math.sin(f / 10);
   return (
     <AbsoluteFill>
       <Bg tint="brand" />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 18 }}>
         <BrandLogo width={1050} delay={4} />
-        <Words text="ভালো চার্জ, দীর্ঘ পথ, নিরবচ্ছিন্ন আয়।" size={64} weight={700} align="center" delay={at(2.3)} hl={["চার্জ,", "পথ,", "আয়।"]} hlColor={C.yellow} style={{ marginTop: 40 }} />
+        <Words text="ভালো চার্জ, দীর্ঘ পথ, নিরবচ্ছিন্ন আয়।" size={64} weight={700} align="center" delay={at(2.15)} hl={["চার্জ,", "পথ,", "আয়।"]} hlColor={C.yellow} style={{ marginTop: 40 }} />
         <div
           style={{
             marginTop: 40,

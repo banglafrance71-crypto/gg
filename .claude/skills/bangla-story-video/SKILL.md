@@ -29,6 +29,7 @@ The user explicitly said they don't want to explain their style every time. So m
 ## Non-negotiables (learned from the user's corrections)
 
 - **Visual storytelling over kinetic text.** Never fill a scene with sentence-long animated text. Pain points get a character in trouble, a camera push into the face, and an expression change.
+- **Brisk pacing, no dead air.** Tighten every voice clip (`scripts/tighten_vo.sh`) and keep under 0.8 s between lines; add hold frames only where the picture must land.
 - **Zoom into the face at the emotional moment** (shock, confusion, sadness, relief). This is the user's favourite device.
 - **Never cover the client's logo.** Badges, bubbles, labels, sparkles and heads must clear the brand mark, both in the wide shot and in zoomed shots. Check this in the stills.
 - **Use the client's real logo**, background removed with `scripts/key_logo.py` and split into parts (icon, wordmark, tagline) so it can animate. Don't redraw or restyle it.

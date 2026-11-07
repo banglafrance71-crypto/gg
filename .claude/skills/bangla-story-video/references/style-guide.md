@@ -89,8 +89,9 @@ In promo cartoons for low-literacy audiences, use the minimum: brand, a few labe
   - pan from a sad face toward the light (hope)
   - a slight shake for danger (sparks)
 - Parallax for travel: background layers at 0.25 / 0.55 / 0.9 / 1.0 of the road speed.
-- Between scenes, use fades (18 frames) by default; slides only for energetic promo moments. Inside a scene, change the vignette with a quick 6–8 frame fade.
-- Cinematic look: slower everything, 4–6 second holds, fade through black between chapters.
+- **Pacing is brisk.** The voice runs almost continuously, with under 0.8 s between lines and no dead air between scenes. Motion inside a shot keeps things alive; don't hold empty frames waiting for the next line.
+- Between scenes, use fades (12 frames) by default; slides only for energetic promo moments. Inside a scene, change the vignette with a quick 6–8 frame fade.
+- Cinematic look: calmer moves and longer shots, but still no silent gaps between narration lines; fade through black only between chapters.
 
 ## 6. Sound
 
