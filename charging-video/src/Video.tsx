@@ -5,20 +5,15 @@ import { linearTiming, TransitionSeries } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
-import {
-  S10Goals, S11Income, S12Location, S13Outro, S1Hook, S2Loss, S3Problems,
-  S4Wiring, S5Bridge, S6Brand, S7Power, S8Time, S9Safety,
-} from "./scenes";
+import { S12Location } from "./scenes";
+import { T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T13 } from "./story";
 import { BrandLogo } from "./brand";
 import { C, FPS, LEAD } from "./theme";
 
 const T = 18;
 /* Voiceover clip length (seconds) per scene, from public/vo/sNN.mp3 */
 const VO = [8.44, 5.56, 11.08, 10.11, 4.05, 8.28, 7.16, 17.79, 11.39, 10.11, 11.31, 7.71, 13.79];
-const COMPS: React.FC[] = [
-  S1Hook, S2Loss, S3Problems, S4Wiring, S5Bridge, S6Brand, S7Power,
-  S8Time, S9Safety, S10Goals, S11Income, S12Location, S13Outro,
-];
+const COMPS: React.FC[] = [T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, S12Location, T13];
 // clip starts LEAD frames in, plus a breath and the outgoing transition
 const SCENES = COMPS.map((C, i) => ({
   C,

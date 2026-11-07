@@ -42,16 +42,19 @@ export const EasyBike: React.FC<{
   speed?: number;
   hazard?: boolean;
   body?: string;
-}> = ({ width = 700, speed = 0, hazard, body = "#D42A2A" }) => {
+  driver?: React.ReactNode;
+  passengers?: React.ReactNode;
+  jerk?: number;
+}> = ({ width = 700, speed = 0, hazard, body = "#D42A2A", driver, passengers, jerk = 0 }) => {
   const f = useCurrentFrame();
   const rot = f * speed * 6;
   const bob = speed > 0 ? Math.sin(f / 3) * 2.5 : 0;
   const hz = hazard ? (Math.floor(f / 10) % 2 === 0 ? 1 : 0.2) : 0.85;
   const dark = "#7d1414";
   return (
-    <svg width={width} height={width * 0.68} viewBox="0 0 1000 680">
+    <svg width={width} height={width * 0.68} viewBox="0 0 1000 680" style={{ overflow: "visible" }}>
       <ellipse cx={530} cy={650} rx={480} ry={18} fill="rgba(0,0,0,0.45)" />
-      <g transform={`translate(0 ${bob})`}>
+      <g transform={`translate(0 ${bob}) rotate(${jerk} 530 600)`}>
         {/* front canopy arc */}
         <path d="M690 40 Q880 60 945 330 L925 335 Q860 95 690 70 Z" fill="#8b9097" />
         <path d="M920 300 L960 330 L955 400 L930 395 Z" fill="none" stroke="#aeb4bb" strokeWidth={8} strokeLinejoin="round" />
@@ -65,6 +68,7 @@ export const EasyBike: React.FC<{
         <path d="M120 140 Q200 200 205 330" stroke="#1d1f24" strokeWidth={6} fill="none" />
         {/* rear seat backrest */}
         <rect x={62} y={170} width={50} height={100} rx={14} fill={body} />
+        {passengers}
         {/* passenger seat */}
         <path d="M420 300 Q420 285 440 285 H670 Q690 285 690 305 V385 H420 Z" fill="#1d1f24" />
         <rect x={432} y={298} width={246} height={74} rx={10} fill="#6e737b" />
@@ -87,6 +91,7 @@ export const EasyBike: React.FC<{
         {/* driver seat & front column */}
         <path d="M740 310 L775 300 L790 330 L760 515 L735 515 Z" fill="#3a1010" />
         <path d="M765 312 L795 305 L812 335 L790 400 L770 380 Z" fill="#a01d1d" />
+        {driver}
         <path d="M790 300 L905 590" stroke="#2a2d33" strokeWidth={16} strokeLinecap="round" />
         <path d="M805 300 L920 590" stroke="#8b9097" strokeWidth={6} strokeLinecap="round" />
         <path d="M790 285 L840 270 L875 300 L850 330 Z" fill="#1d1f24" />
