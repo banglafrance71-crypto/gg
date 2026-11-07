@@ -95,3 +95,6 @@ Run it in the background; a 2–3 minute video takes several minutes. Verify wit
 - **Watermarked stock reference images**: don't embed them; draw original vector art of the same vehicle or object type.
 - **`concurrency` higher than the CPU count fails validation**; check `nproc`.
 - A mixed `TransitionPresentation` array needs an `any[]` type annotation in TypeScript.
+- **Two suns**: `Street` draws its own sun; pass `noSun` when you animate a custom sun or moon (time-lapse).
+- **Sun or moon crossing the station sign**: in station scenes keep sky bodies on a compact arc above y=200 (the `low` arc in the opening example).
+- Short voice clips leave no room for the picture to land; add per-scene `PAD` frames after the voice for zoom holds, ribbon cuts and confetti.

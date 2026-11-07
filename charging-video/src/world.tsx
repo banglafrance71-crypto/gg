@@ -67,10 +67,11 @@ const SKY: Record<TimeOfDay, [string, string, string]> = {
   night: ["#07101F", "#13233E", "#1E2D47"],
 };
 
-export const Street: React.FC<{ offset?: number; time?: TimeOfDay; width?: number }> = ({
+export const Street: React.FC<{ offset?: number; time?: TimeOfDay; width?: number; noSun?: boolean }> = ({
   offset = 0,
   time = "day",
   width = 1920,
+  noSun,
 }) => {
   const f = useCurrentFrame();
   const [a, b, c] = SKY[time];
@@ -85,7 +86,7 @@ export const Street: React.FC<{ offset?: number; time?: TimeOfDay; width?: numbe
     <AbsoluteFill style={{ width, overflow: "hidden" }}>
       <AbsoluteFill style={{ background: `linear-gradient(${a} 0%, ${b} 55%, ${c} 75%)` }} />
       {/* sun / moon */}
-      <div
+      {noSun ? null : <div
         style={{
           position: "absolute",
           left: 1450,
@@ -96,7 +97,7 @@ export const Street: React.FC<{ offset?: number; time?: TimeOfDay; width?: numbe
           background: night ? "#E9EEF7" : "#FFE27A",
           boxShadow: night ? "0 0 60px #9fb6ff88" : "0 0 120px #FFD23F",
         }}
-      />
+      />}
       {/* buildings */}
       <svg width={width + bTile * 2} height={1080} style={{ position: "absolute", left: bx, top: 0 }}>
         {[0, 1, 2].map((rep) => {

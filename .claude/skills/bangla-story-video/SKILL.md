@@ -43,6 +43,7 @@ The user explicitly said they don't want to explain their style every time. So m
 - `references/story-structure.md`: arcs for promos and stories, a beat-sheet template, and a library of visual metaphors.
 - `references/pipeline.md`: Remotion setup, fonts, ElevenLabs voiceover and timing, logo prep, stills QA, rendering, and known pitfalls.
 - `examples/nirapod-story-scenes.tsx` and `examples/nirapod-timeline.tsx`: a complete, approved promo built with the kit (13 scenes, voice-synced).
+- `examples/nirapod-opening-scenes.tsx`: an opening / inauguration promo (time-lapse sky, all-night charging, ribbon cutting, guests, confetti).
 
 ## Kit contents (`assets/kit/`)
 
